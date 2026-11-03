@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>UNIT 2 - 38 Soru Yarışma</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#fffbe6;color:#111;min-height:100vh;padding:0}
+.container{max-width:420px;margin:0 auto;padding:8px 12px 20px}
+h1{font-size:16px;text-align:center;font-weight:900;letter-spacing:0.5px;margin:6px 0 8px}
+.card{background:#fff;border:2.5px solid #111;border-radius:16px;padding:14px;box-shadow:4px 4px 0 #111;margin-bottom:10px}
+.top3-title{font-size:11px;font-weight:800;color:#666;letter-spacing:0.8px;margin-bottom:8px;text-align:center}
+.top3-item{display:flex;justify-content:space-between;align-items:center;padding:6px 8px;border-radius:8px;margin-bottom:4px;font-size:13px;font-weight:600}
+.top3-item.gold{background:#fef3c7;border:1.5px solid #f59e0b}
+.top3-item.silver{background:#f3f4f6;border:1.5px solid #9ca3af}
+.top3-item.bronze{background:#fde68a;border:1.5px solid #d97706}
+.top3-empty{text-align:center;color:#999;font-size:12px;padding:10px}
+.label{font-size:10px;font-weight:800;color:#888;letter-spacing:0.8px;margin-bottom:4px;text-transform:uppercase}
+select,input{width:100%;padding:12px 12px;border:2.5px solid #111;border-radius:10px;font-size:15px;background:#fff;outline:none;margin-bottom:8px}
+select:focus,input:focus{border-color:#f59e0b}
+.btn{width:100%;padding:14px;border:2.5px solid #111;border-radius:12px;font-weight:900;font-size:16px;cursor:pointer;transition:transform 0.05s}
+.btn:active{transform:translate(2px,2px);box-shadow:1px 1px 0 #111 !important}
+.btn-start{background:#ffeb3b;box-shadow:4px 4px 0 #111}
+.btn-start:disabled{background:#e5e7eb;color:#9ca3af;box-shadow:2px 2px 0 #9ca3af;cursor:not-allowed}
+.btn-next{background:#111;color:#fff;box-shadow:4px 4px 0 #444;margin-top:12px}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px}
+.timer{font-weight:900;font-size:18px;background:#111;color:#fff;padding:4px 10px;border-radius:8px;min-width:60px;text-align:center}
+.timer.warn{background:#ef4444;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.7}}
+.progress-text{font-size:11px;color:#666;font-weight:700}
+.progress-bar{height:4px;background:#e5e7eb;border-radius:2px;overflow:hidden;margin-bottom:10px}
+.progress-fill{height:100%;background:#111;transition:width 0.3s}
+.question{font-size:24px;font-weight:900;text-align:center;margin:10px 0 12px;min-height:36px;line-height:1.2}
+.question-sub{font-size:11px;color:#666;text-align:center;margin-bottom:8px}
+.options{display:grid;gap:8px}
+.option{padding:12px 12px;border:2px solid #111;border-radius:10px;background:#fff;font-size:14px;font-weight:600;cursor:pointer;text-align:left;min-height:48px;display:flex;align-items:center}
+.option:hover{background:#fef3c7}
+.option.correct{background:#dcfce7 !important;border-color:#16a34a !important}
+.option.wrong{background:#fee2e2 !important;border-color:#dc2626 !important}
+.option.disabled{pointer-events:none}
+.answer-info{margin-top:10px;padding:10px;border-radius:10px;font-size:13px;display:none}
+.answer-info.show{display:block}
+.answer-info.ok{background:#dcfce7;border:1.5px solid #16a34a}
+.answer-info.bad{background:#fee2e2;border:1.5px solid #dc2626}
+.result-title{font-size:22px;font-weight:900;text-align:center;margin-bottom:8px}
+.result-score{font-size:14px;text-align:center;color:#444;margin-bottom:12px}
+.github-box{margin-top:16px;padding:10px;background:#f3f4f6;border:1.5px dashed #9ca3af;border-radius:10px;font-size:11px;color:#444}
+.github-box b{color:#111}
+.error-msg{color:#dc2626;font-size:12px;margin-bottom:8px;display:none;font-weight:600}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>UNIT 2 - 38 SORU YARIŞMA</h1>
+
+<!-- BAŞLANGIÇ EKRANI -->
+<div id="startScreen">
+<div class="card">
+<div class="top3-title">🏆 İLK 3 - LİDERLİK TABLOSU</div>
+<div id="top3List"></div>
+</div>
+
+<div class="card">
+<div class="label">ÖĞRENCİ SEÇ</div>
+<select id="studentSelect">
+<option value="">Öğrenci seç...</option>
+<option value="mehtap">Mehtap</option>
+<option value="yusuf">Yusuf</option>
+<option value="buse">Buse</option>
+<option value="huseyin">Hüseyin</option>
+</select>
+
+<div class="label">ŞİFRE</div>
+<input type="password" id="passwordInput" placeholder="Şifreni gir...">
+<div class="error-msg" id="errorMsg"></div>
+
+<button class="btn btn-start" id="startBtn" disabled>BAŞLAT ▶</button>
+<div style="text-align:center;font-size:10px;color:#888;margin-top:8px">3 dakika - 38 soru - Şıklar karışık</div>
+</div>
+
+<div class="github-box">
+<b>GitHub'a Yükleme:</b><br>
+1. Bu sayfada sağ tık > Farklı Kaydet > <b>index.html</b><br>
+2. GitHub > Yeni repo > <b>unit2-yarisma</b><br>
+3. Add file > Upload > index.html yükle<br>
+4. Settings > Pages > Branch: main > Save<br>
+5. 2 dk sonra link hazır!
+</div>
+</div>
+
+<!-- TEST EKRANI -->
+<div id="quizScreen" style="display:none">
+<div class="header">
+<div class="progress-text" id="progressText">1 / 38</div>
+<div class="timer" id="timer">03:00</div>
+<div class="progress-text" id="scoreText">0✓ 0✗</div>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<div class="card">
+<div class="question-sub" id="questionSub">İNGİLİZCE → TÜRKÇE</div>
+<div class="question" id="questionText">achieve</div>
+<div class="options" id="optionsBox"></div>
+<div class="answer-info" id="answerInfo"></div>
+<button class="btn btn-next" id="nextBtn" style="display:none" onclick="nextQuestion()">Sonraki →</button>
+</div>
+</div>
+
+<!-- SONUÇ EKRANI -->
+<div id="resultScreen" style="display:none">
+<div class="card" style="text-align:center">
+<div class="result-title" id="resultTitle">Test Bitti!</div>
+<div class="result-score" id="resultDetail"></div>
+<div id="wrongList" style="text-align:left;font-size:12px;margin:10px 0"></div>
+<button class="btn btn-start" onclick="restartAll()">Yeniden Başlat</button>
+</div>
+<div class="card">
+<div class="top3-title">🏆 GÜNCEL TOP 3</div>
+<div id="finalTop3"></div>
+</div>
+</div>
+
+</div>
+
+<script>
+const students = {
+  mehtap: {name:"Mehtap", pass:"mehtap123"},
+  yusuf: {name:"Yusuf", pass:"yusuf123"},
+  buse: {name:"Buse", pass:"buse123"},
+  huseyin: {name:"Hüseyin", pass:"huseyin123"}
+};
+
+const baseWords = [
+  {en:"achieve", tr:"başarmak"},
+  {en:"beat", tr:"yenmek"},
+  {en:"compete", tr:"yarışmak"},
+  {en:"draw", tr:"berabere kalmak"},
+  {en:"equipment", tr:"ekipman, malzeme"},
+  {en:"go on a diet", tr:"diyet yapmak, diyete başlamak"},
+  {en:"gym", tr:"spor salonu"},
+  {en:"hit", tr:"vurmak"},
+  {en:"indoor", tr:"kapalı alanda yapılan"},
+  {en:"injury", tr:"sakatlanma, yaralanma"},
+  {en:"lose", tr:"kaybetmek"},
+  {en:"medal", tr:"madalya"},
+  {en:"opponent", tr:"rakip"},
+  {en:"outdoor", tr:"açık havada yapılan"},
+  {en:"score", tr:"sayı/gol yapmak"},
+  {en:"spectator", tr:"seyirci"},
+  {en:"success", tr:"başarı"},
+  {en:"team", tr:"takım"},
+  {en:"train", tr:"antrenman yapmak"}
+];
+
+let questions = [];
+let currentIndex = 0;
+let correctCount = 0;
+let wrongCount = 0;
+let currentStudent = null;
+let timerInterval = null;
+let timeLeft = 180;
+let answered = false;
+
+function shuffleArray(arr){
+  let a = [...arr];
+  for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}
+  return a;
+}
+
+function buildQuestions(){
+  let list = [];
+  // İlk 19: EN -> TR
+  baseWords.forEach(w=>{
+    list.push({q:w.en, a:w.tr, type:"EN_TR", correct:w.tr, allTr: baseWords.map(x=>x.tr)});
+  });
+  // Son 19: TR -> EN
+  baseWords.forEach(w=>{
+    list.push({q:w.tr, a:w.en, type:"TR_EN", correct:w.en, allEn: baseWords.map(x=>x.en)});
+  });
+  return shuffleArray(list);
+}
+
+function getTop3(){
+  try{
+    let data = JSON.parse(localStorage.getItem("yarisma_top3")||"[]");
+    data.sort((a,b)=>{ if(b.correct!==a.correct) return b.correct-a.correct; return a.elapsed-b.elapsed; });
+    return data.slice(0,3);
+  }catch(e){return []}
+}
+
+function renderTop3(containerId){
+  let el = document.getElementById(containerId);
+  let top3 = getTop3();
+  if(top3.length===0){el.innerHTML='<div class="top3-empty">Henüz yarışan yok, ilk sen ol!</div>';return}
+  let html="";
+  top3.forEach((r,i)=>{
+    let cls = i===0?"gold":i===1?"silver":"bronze";
+    let medal = i===0?"🥇":i===1?"🥈":"🥉";
+    html+=`<div class="top3-item ${cls}"><span>${medal} ${r.studentName}</span><span>${r.correct}/38 - ${Math.floor(r.elapsed/60)}:${String(r.elapsed%60).padStart(2,"0")}</span></div>`;
+  });
+  el.innerHTML=html;
+}
+
+function renderStart(){
+  renderTop3("top3List");
+}
+
+document.getElementById("studentSelect").addEventListener("change", checkForm);
+document.getElementById("passwordInput").addEventListener("input", checkForm);
+
+function checkForm(){
+  let sel = document.getElementById("studentSelect").value;
+  let pass = document.getElementById("passwordInput").value.trim();
+  let btn = document.getElementById("startBtn");
+  let err = document.getElementById("errorMsg");
+  if(!sel){btn.disabled=true;err.style.display="none";return}
+  if(!pass){btn.disabled=true;return}
+  // şifre kontrol
+  if(students[sel] && students[sel].pass===pass){
+    btn.disabled=false;
+    err.style.display="none";
+  }else{
+    btn.disabled=true;
+    if(pass.length>=3){err.textContent="Şifre yanlış!";err.style.display="block";}
+  }
+}
+
+document.getElementById("startBtn").addEventListener("click", ()=>{
+  let sel = document.getElementById("studentSelect").value;
+  let pass = document.getElementById("passwordInput").value.trim();
+  if(!students[sel] || students[sel].pass!==pass){alert("Şifre yanlış!");return}
+  currentStudent = students[sel];
+  startQuiz();
+});
+
+function startQuiz(){
+  questions = buildQuestions();
+  currentIndex=0;
+  correctCount=0;
+  wrongCount=0;
+  timeLeft=180;
+  document.getElementById("startScreen").style.display="none";
+  document.getElementById("quizScreen").style.display="block";
+  document.getElementById("resultScreen").style.display="none";
+  startTimer();
+  showQuestion();
+}
+
+function startTimer(){
+  updateTimerDisplay();
+  clearInterval(timerInterval);
+  timerInterval = setInterval(()=>{
+    timeLeft--;
+    updateTimerDisplay();
+    if(timeLeft<=0){
+      clearInterval(timerInterval);
+      finishQuiz(true);
+    }
+  },1000);
+}
+
+function updateTimerDisplay(){
+  let m = Math.floor(timeLeft/60);
+  let s = timeLeft%60;
+  let el = document.getElementById("timer");
+  el.textContent = `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;
+  if(timeLeft<=30) el.classList.add("warn"); else el.classList.remove("warn");
+}
+
+function showQuestion(){
+  if(currentIndex>=questions.length){finishQuiz(false);return}
+  let q = questions[currentIndex];
+  answered=false;
+  document.getElementById("progressText").textContent = `${currentIndex+1} / ${questions.length}`;
+  document.getElementById("scoreText").textContent = `${correctCount}✓ ${wrongCount}✗`;
+  document.getElementById("progressFill").style.width = `${(currentIndex/questions.length)*100}%`;
+  document.getElementById("questionText").textContent = q.q;
+  document.getElementById("questionSub").textContent = q.type==="EN_TR" ? "İNGİLİZCE → TÜRKÇE" : "TÜRKÇE → İNGİLİZCE";
+  document.getElementById("answerInfo").className="answer-info";
+  document.getElementById("answerInfo").style.display="none";
+  document.getElementById("nextBtn").style.display="none";
+
+  // şıklar
+  let correct = q.correct;
+  let pool = q.type==="EN_TR" ? baseWords.map(x=>x.tr) : baseWords.map(x=>x.en);
+  let wrongPool = pool.filter(p=>p!==correct);
+  wrongPool = shuffleArray(wrongPool).slice(0,3);
+  let options = shuffleArray([correct, ...wrongPool]);
+
+  let box = document.getElementById("optionsBox");
+  box.innerHTML="";
+  options.forEach((opt,i)=>{
+    let div = document.createElement("div");
+    div.className="option";
+    div.textContent = `${String.fromCharCode(65+i)}) ${opt}`;
+    div.onclick = ()=> selectOption(div, opt, correct);
+    box.appendChild(div);
+  });
+}
+
+function selectOption(el, selected, correct){
+  if(answered) return;
+  answered=true;
+  let opts = document.querySelectorAll(".option");
+  opts.forEach(o=>o.classList.add("disabled"));
+  
+  let info = document.getElementById("answerInfo");
+  if(selected===correct){
+    el.classList.add("correct");
+    correctCount++;
+    info.className="answer-info show ok";
+    info.textContent="✓ Doğru!";
+  }else{
+    el.classList.add("wrong");
+    wrongCount++;
+    // doğruyu göster
+    opts.forEach(o=>{
+      if(o.textContent.includes(correct)) o.classList.add("correct");
+    });
+    info.className="answer-info show bad";
+    info.textContent=`✗ Yanlış! Doğrusu: ${correct}`;
+  }
+  info.style.display="block";
+  document.getElementById("scoreText").textContent = `${correctCount}✓ ${wrongCount}✗`;
+  document.getElementById("nextBtn").style.display="block";
+}
+
+function nextQuestion(){
+  currentIndex++;
+  showQuestion();
+}
+
+function finishQuiz(timedOut){
+  clearInterval(timerInterval);
+  document.getElementById("quizScreen").style.display="none";
+  document.getElementById("resultScreen").style.display="block";
+  let elapsed = 180 - timeLeft;
+  let title = document.getElementById("resultTitle");
+  title.textContent = timedOut ? "⏰ Süre Doldu!" : "Test Bitti!";
+  
+  let detail = document.getElementById("resultDetail");
+  detail.innerHTML = `<b>${currentStudent.name}</b><br>${correctCount} doğru, ${wrongCount} yanlış<br>Süre: ${Math.floor(elapsed/60)}dk ${elapsed%60}sn`;
+
+  // kaydet
+  try{
+    let data = JSON.parse(localStorage.getItem("yarisma_top3")||"[]");
+    data.push({studentId: currentStudent.name.toLowerCase(), studentName: currentStudent.name, correct: correctCount, wrong: wrongCount, elapsed: elapsed, date: new Date().toISOString()});
+    localStorage.setItem("yarisma_top3", JSON.stringify(data));
+  }catch(e){}
+
+  renderTop3("finalTop3");
+
+  // yanlışlar
+  let wrongDiv = document.getElementById("wrongList");
+  if(wrongCount>0){
+    wrongDiv.innerHTML = `<b>Tekrar etmen gerekenler:</b> ${wrongCount} kelime`;
+  }else{
+    wrongDiv.innerHTML = "🎉 Harika! Tüm sorular doğru!";
+  }
+}
+
+function restartAll(){
+  document.getElementById("resultScreen").style.display="none";
+  document.getElementById("startScreen").style.display="block";
+  document.getElementById("passwordInput").value="";
+  document.getElementById("studentSelect").value="";
+  document.getElementById("startBtn").disabled=true;
+  renderStart();
+}
+
+// ilk yükle
+renderStart();
+</script>
+</body>
+</html>
